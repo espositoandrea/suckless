@@ -1,7 +1,8 @@
-.PHONY: sent
 tempdir != mktemp -d -t suckless-build-XXXXXXXXXXXX
+
 DELETE = true
 TARGET = bin
+
 EMPHASYS = \033[01m
 RESET = \033[0m
 
@@ -18,8 +19,11 @@ define build_target
 
 	@echo -e "$(EMPHASYS)Applying patches$(RESET)"
 	@for patch in "$(shell pwd)/$(1)/patches"/*.diff; do \
-		cd "$(tempdir)/$(1)" && git am "$$patch"; \
+		cd "$(tempdir)/$(1)" && patch -l -p1 < "$$patch"; \
 	done;
+
+	@echo -e "$(EMPHASYS)Copying config file$(RESET)"
+	@[ -f "$(shell pwd)/$(1)/config.h" ] && cp "$(shell pwd)/$(1)/config.h" "$(tempdir)/$(1)"
 
 	@echo -e "$(EMPHASYS)Building '$(1)'$(RESET)"
 	@if [ -z "$(verbose)" ]; then \
@@ -44,3 +48,8 @@ all: sent
 
 sent:
 	$(call build_target,sent)
+
+dmenu:
+	$(call build_target,dmenu)
+
+.PHONY: sent dmenu
