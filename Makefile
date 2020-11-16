@@ -48,7 +48,7 @@ define build_target
 endef
 
 all: DELETE = false
-all: sent dmenu
+all: sent dmenu st
 	@echo -e "$(EMPHASYS)Removing temporary directory$(RESET)"
 	@rm -rf "$(tempdir)"
 
@@ -58,4 +58,7 @@ sent:
 dmenu:
 	$(call build_target,dmenu)
 
-.PHONY: sent dmenu
+st:
+	$(call build_target,st)
+
+.PHONY: sent dmenu st
