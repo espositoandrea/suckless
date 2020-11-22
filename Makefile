@@ -2,21 +2,17 @@ tempdir != mktemp -d -t suckless-build-XXXXXXXXXXXX
 
 DELETE = true
 
-EMPHASYS = \033[01m
-RESET = \033[0m
+EMPHASYS = $(shell tput bold; tput setf 1)
+RESET = $(shell tput sgr0)
 
 define build_target
-	@echo -e "$(EMPHASYS)Cloning '$(1)'$(RESET)"
-	@if [ -z "$(verbose)" ]; then \
-		git clone https://git.suckless.org/$(1) $(tempdir)/$(1) >/dev/null 2>&1; \
-	else \
-		git clone https://git.suckless.org/$(1) $(tempdir)/$(1); \
-	fi
+	@printf "$(EMPHASYS)Cloning '$(1)'$(RESET)\n"
+	@git clone https://git.suckless.org/$(1) $(tempdir)/$(1) >/dev/null 2>&1
 
 	@if [ ! -z "$$(ls -A "$(shell pwd)/$(1)/patches")" ]; then \
-		echo -e "$(EMPHASYS)Applying patches$(RESET)"; \
+		printf "$(EMPHASYS)Applying patches$(RESET)\n"; \
 		for patch in "$(shell pwd)/$(1)/patches"/*; do \
-			echo "Applying patch $$(basename $$patch)"; \
+			printf "Applying patch $$(basename $$patch)\n"; \
 			if [ -z "$(verbose)" ]; then \
 				cd "$(tempdir)/$(1)" && \
 					git am "$$patch" >/dev/null 2>&1 || \
@@ -30,11 +26,11 @@ define build_target
 	fi
 
 	@if [ -f "$(shell pwd)/$(1)/config.h" ]; then \
-		echo -e "$(EMPHASYS)Copying config file$(RESET)"; \
+		printf "$(EMPHASYS)Copying config file$(RESET)\n"; \
 		cp "$(shell pwd)/$(1)/config.h" "$(tempdir)/$(1)"; \
 	fi
 
-	@echo -e "$(EMPHASYS)Building and installing '$(1)'$(RESET)"
+	@printf "$(EMPHASYS)Building and installing '$(1)'$(RESET)\n"
 	@if [ -z "$(verbose)" ]; then \
 		sudo $(MAKE) -C "$(tempdir)/$(1)" install >/dev/null 2>&1; \
 	else \
@@ -42,14 +38,14 @@ define build_target
 	fi
 
 	@if [ $(DELETE) = true ]; then \
-		echo -e "$(EMPHASYS)Removing temporary directory$(RESET)"; \
+		printf "$(EMPHASYS)Removing temporary directory$(RESET)\n"; \
 		rm -rf "$(tempdir)"; \
 	fi;
 endef
 
 all: DELETE = false
 all: sent dmenu st
-	@echo -e "$(EMPHASYS)Removing temporary directory$(RESET)"
+	@printf "$(EMPHASYS)Removing temporary directory$(RESET)\n"
 	@rm -rf "$(tempdir)"
 
 sent:
