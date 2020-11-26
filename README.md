@@ -5,6 +5,15 @@ my needs.
 
 ## How to Build?
 
+### Dependencies
+
+Optional dependencies:
+
+- [libxft-bgra<sup>AUR</sup>](https://aur.archlinux.org/packages/libxft-bgra/) (needed for
+  colored emojis support)
+
+### Building
+
 To build a tool, simply use:
 
 ```shell
@@ -22,3 +31,4 @@ make verbose=1 TOOL
 ```
 
 The builded tools will be automatically installed (this requires sudo).
+
