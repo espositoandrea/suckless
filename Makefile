@@ -57,4 +57,7 @@ dmenu:
 st:
 	$(call build_target,st)
 
-.PHONY: sent dmenu st
+surf:
+	$(call build_target,surf)
+
+.PHONY: sent dmenu st surf
