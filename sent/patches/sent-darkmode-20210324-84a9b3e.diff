@@ -1,0 +1,78 @@
+From 614283b61126137be07ce4e9c3367427029c71a4 Mon Sep 17 00:00:00 2001
+From: Andrea Esposito <esposito_andrea99@hotmail.com>
+Date: Wed, 24 Mar 2021 13:08:28 +0100
+Subject: [PATCH] Add dark mode toggle
+
+Added the option '-d' to toggle the dark mode. This uses the theme
+defined in config.h under "dark_mode_colors" (the default theme is the
+dracula theme defined at
+https://github.com/dracula/dracula-theme/blob/master/README.md)
+---
+ config.def.h | 5 +++++
+ sent.1       | 3 +++
+ sent.c       | 5 ++++-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index 60eb376..7e5c2c6 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -13,6 +13,11 @@ static const char *colors[] = {
+ 	"#FFFFFF", /* background color */
+ };
+ 
++static const char *dark_mode_colors[] = {
++	"#f8f8f2", /* foreground color in dark mode */
++	"#282a36", /* background color in dark mode */
++};
++
+ static const float linespacing = 1.4;
+ 
+ /* how much screen estate is to be used at max for the content */
+diff --git a/sent.1 b/sent.1
+index 5d55bf4..795e7ff 100644
+--- a/sent.1
++++ b/sent.1
+@@ -8,6 +8,7 @@
+ .Op Fl f Ar font
+ .Op Fl c Ar fgcolor
+ .Op Fl b Ar bgcolor
++.Op Fl d
+ .Op Fl v
+ .Op Ar file
+ .Sh DESCRIPTION
+@@ -32,6 +33,8 @@ when sent is run.
+ Defines the foreground color when sent is run.
+ .It Fl b Ar bgcolor
+ Defines the background color when sent is run.
++.It Fl d
++Set the presentation mode to the dark mode theme.
+ .El
+ .Sh USAGE
+ .Bl -tag -width Ds
+diff --git a/sent.c b/sent.c
+index 94859b7..98da687 100644
+--- a/sent.c
++++ b/sent.c
+@@ -679,7 +679,7 @@ configure(XEvent *e)
+ void
+ usage()
+ {
+-	die("usage: %s [-c fgcolor] [-b bgcolor] [-f font] [file]", argv0);
++	die("usage: %s [-c fgcolor] [-b bgcolor] [-f font] [-d] [file]", argv0);
+ }
+ 
+ int
+@@ -699,6 +699,9 @@ main(int argc, char *argv[])
+ 		break;
+ 	case 'b':
+ 		colors[1] = EARGF(usage());
++	case 'd':
++		colors[0] = dark_mode_colors[0];
++		colors[1] = dark_mode_colors[1];
+ 		break;
+ 	default:
+ 		usage();
+-- 
+2.25.1
+

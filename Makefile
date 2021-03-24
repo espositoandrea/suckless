@@ -11,7 +11,7 @@ define build_target
 
 	@if [ ! -z "$$(ls -A "$(shell pwd)/$(1)/patches")" ]; then \
 		printf "$(EMPHASYS)Applying patches$(RESET)\n"; \
-		for patch in "$(shell pwd)/$(1)/patches"/*; do \
+		ls -rt "$(shell pwd)/$(1)/patches"/* | while read patch; do \
 			printf "Applying patch $$(basename $$patch)\n"; \
 			if [ -z "$(verbose)" ]; then \
 				cd "$(tempdir)/$(1)" && \
